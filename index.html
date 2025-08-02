@@ -1,41 +1,231 @@
-    a { color: #4a76a8; text-decoration: none; }
-    a:hover { text-decoration: underline; }
+<!DOCTYPE html>
+<html lang="he">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>אלינור רהיטים בע"מ</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      direction: rtl;
+      margin: 0;
+      padding: 0;
+      background-color: #f2f2f2;
+      color: #333;
+    }
+    header {
+      background-color: #002b5c;
+      color: white;
+      padding: 1em;
+      text-align: center;
+      font-size: 2em;
+    }
+    nav {
+      background-color: #004080;
+      color: white;
+      display: flex;
+      justify-content: space-around;
+      padding: 0.8em 0;
+    }
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 1300px;
+      margin: auto;
+      padding: 20px;
+    }
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1em;
+      margin-bottom: 20px;
+    }
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background-color: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+    }
+    .card:hover {
+      transform: translateY(-5px);
+    }
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 6px;
+    }
+    .card h3 {
+      margin: 0.5em 0 0.2em;
+    }
+    .card p {
+      margin: 0;
+    }
+    .cart, .contact {
+      margin-top: 50px;
+      background-color: white;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .btn {
+      background-color: #004080;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+    footer {
+      background-color: #002b5c;
+      color: white;
+      text-align: center;
+      padding: 1em;
+      margin-top: 50px;
+    }
   </style>
 </head>
 <body>
+  <header>אלינור רהיטים בע"מ</header>
+  <nav>
+    <a href="#products">מוצרים</a>
+    <a href="#cart">עגלה</a>
+    <a href="#contact">צור קשר</a>
+  </nav>
+  <div class="container">
+    <section class="filters">
+      <input type="text" id="search" placeholder="חפש מוצר..." oninput="renderProducts()">
+      <input type="number" id="minPrice" placeholder="מחיר מינימלי" oninput="renderProducts()">
+      <input type="number" id="maxPrice" placeholder="מחיר מקסימלי" oninput="renderProducts()">
+      <select id="category" onchange="renderProducts()">
+        <option value="הכל">כל הקטגוריות</option>
+        <option value="סלון">סלון</option>
+        <option value="חדר שינה">חדר שינה</option>
+        <option value="מטבח">מטבח</option>
+        <option value="משרד">משרד</option>
+      </select>
+    </section>
 
-  <header>
-    <h1>Chaim Raviv</h1>
-    <p>Freelance Developer | CS Student | Programming & Math Tutor</p>
-  </header>
+    <section id="products" class="products"></section>
 
-  <section>
-    <h2>About Me</h2>
-    <p>
-      I’m a high school and college student studying Computer Science.  
-      I can help you with your programming assignments, or even teach you programming from scratch!  
-      I specialize in C and Java, and I also teach high-level mathematics.
-    </p>
+    <section id="cart" class="cart">
+      <h2>העגלה שלי</h2>
+      <div id="cart-list"></div>
+      <p><strong>סה"כ לתשלום: ₪<span id="total">0</span></strong></p>
+    </section>
 
-    <h2>Skills</h2>
-    <div class="skills">
-      <span>C Programming</span>
-      <span>Java Programming</span>
-      <span>Object-Oriented Programming</span>
-      <span>Debugging</span>
-      <span>Teaching</span>
-      <span>Advanced Mathematics</span>
-    </div>
-
-    <h2>Contact</h2>
-    <p>
-      📧 Email: <a href="mailto:hnrviv@gmail.com">hnrviv@gmail.com</a>
-    </p>
-  </section>
+    <section id="contact" class="contact">
+      <h2>צור קשר</h2>
+      <form onsubmit="submitContactForm(event)">
+        <label>שם מלא:</label>
+        <input type="text" required>
+        <label>אימייל:</label>
+        <input type="email" required>
+        <label>טלפון:</label>
+        <input type="tel" required>
+        <label>הודעה:</label>
+        <textarea rows="4" required></textarea>
+        <button class="btn" type="submit">שלח</button>
+      </form>
+    </section>
+  </div>
 
   <footer>
-    &copy; 2025 Chaim Raviv. All rights reserved.
+    © 2025 אלינור רהיטים בע"מ | כל הזכויות שמורות
   </footer>
 
+  <script>
+    const products = [
+      { name: "ספה דו מושבית", price: 1500, category: "סלון", image: "https://cdn.pixabay.com/photo/2017/01/26/20/48/sofa-2014842_1280.jpg" },
+      { name: "כורסא נוחה", price: 850, category: "סלון", image: "https://cdn.pixabay.com/photo/2016/11/19/14/00/armchair-1835923_1280.jpg" },
+      { name: "מיטה זוגית", price: 3000, category: "חדר שינה", image: "https://cdn.pixabay.com/photo/2020/10/11/09/42/bedroom-5644994_1280.jpg" },
+      { name: "שולחן מטבח", price: 1000, category: "מטבח", image: "https://cdn.pixabay.com/photo/2016/11/29/04/17/architecture-1867187_1280.jpg" },
+      { name: "כיסא משרדי", price: 600, category: "משרד", image: "https://cdn.pixabay.com/photo/2021/08/15/13/34/office-chair-6548167_1280.jpg" }
+    ];
+
+    const cart = [];
+
+    function renderProducts() {
+      const search = document.getElementById('search').value.toLowerCase();
+      const min = parseFloat(document.getElementById('minPrice').value) || 0;
+      const max = parseFloat(document.getElementById('maxPrice').value) || Infinity;
+      const category = document.getElementById('category').value;
+
+      const filtered = products.filter(p =>
+        (p.name.toLowerCase().includes(search)) &&
+        (p.price >= min && p.price <= max) &&
+        (category === 'הכל' || p.category === category)
+      );
+
+      const container = document.getElementById('products');
+      container.innerHTML = '';
+
+      filtered.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${product.image}" alt="${product.name}">
+          <h3>${product.name}</h3>
+          <p>₪${product.price}</p>
+          <button class="btn" onclick='addToCart(${JSON.stringify(product)})'>הוסף לעגלה</button>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function addToCart(product) {
+      const found = cart.find(p => p.name === product.name);
+      if (found) {
+        found.qty++;
+      } else {
+        cart.push({ ...product, qty: 1 });
+      }
+      updateCart();
+    }
+
+    function updateCart() {
+      const list = document.getElementById('cart-list');
+      list.innerHTML = '';
+      let total = 0;
+      cart.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'cart-item';
+        div.textContent = `${p.name} × ${p.qty} = ₪${p.qty * p.price}`;
+        list.appendChild(div);
+        total += p.qty * p.price;
+      });
+      document.getElementById('total').textContent = total;
+    }
+
+    function submitContactForm(event) {
+      event.preventDefault();
+      alert("ההודעה נשלחה בהצלחה! ניצור איתך קשר בהקדם.");
+    }
+
+    renderProducts();
+  </script>
 </body>
 </html>
